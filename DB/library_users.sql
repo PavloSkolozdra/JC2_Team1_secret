@@ -31,7 +31,7 @@ CREATE TABLE `users` (
   `last_name` varchar(45) NOT NULL,
   `registration_date` date NOT NULL,
   `age` int DEFAULT NULL,
-  `user_role_id` int NOT NULL,
+  `user_role_id` int NOT NULL DEFAULT '1',
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`,`user_role_id`),
   KEY `user_role_id_idx` (`user_role_id`),
@@ -58,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-02 23:07:59
+-- Dump completed on 2021-09-03  1:39:02

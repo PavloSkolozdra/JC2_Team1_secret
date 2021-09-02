@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `books_authors`;
 CREATE TABLE `books_authors` (
   `book_id` int NOT NULL,
   `author_id` int NOT NULL,
-  `author_role_id` int NOT NULL,
+  `author_role_id` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`book_id`,`author_id`,`author_role_id`),
   KEY `fk_book_authors_author1_idx` (`author_id`),
   KEY `fk_book_authors_role1_idx` (`author_role_id`),
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-02 23:07:58
+-- Dump completed on 2021-09-03  1:39:01

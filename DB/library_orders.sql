@@ -31,13 +31,13 @@ CREATE TABLE `orders` (
   `due_date` date DEFAULT NULL,
   `return_date` date DEFAULT NULL,
   `book_copy_id` int DEFAULT NULL,
-  `order_status_id` int NOT NULL,
+  `order_status_id` int NOT NULL DEFAULT '1',
   `description` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`,`order_status_id`,`user_id`),
   KEY `user_id_idx` (`user_id`),
   KEY `order_status_id_idx` (`order_status_id`),
   KEY `book_copy_id_idx` (`book_copy_id`),
-  CONSTRAINT `book_copy_id` FOREIGN KEY (`book_copy_id`) REFERENCES `books_copies` (`id`),
+  CONSTRAINT `book_copy_id_idx` FOREIGN KEY (`book_copy_id`) REFERENCES `books_copies` (`id`),
   CONSTRAINT `order_status_id` FOREIGN KEY (`order_status_id`) REFERENCES `orders_statuses` (`id`),
   CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -62,4 +62,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-02 23:07:59
+-- Dump completed on 2021-09-03  1:39:02
