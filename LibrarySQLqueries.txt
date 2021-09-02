@@ -40,10 +40,20 @@ UPDATE library.orders SET return_date = '2021-10-10' WHERE (orders.id = 22);
 
 #3.	Get his/her statistics (how many and how long books were been read, reading now)
 
-SELECT username, book.title, book.author, DATEDIFF(return_date, order_date) AS `days read` FROM library.orders 
-JOIN users ON(orders.user_id = users.id)
-JOIN book ON(orders.book_id = book.id)
-WHERE user_id=5;
+#how long book been read
+SELECT  book.title, order_status_id, DATEDIFF(return_date, processed_date) FROM library_v2.orders
+JOIN book ON (book_id = book.id)
+WHERE user_id = 4 AND order_status_id =3;
+
+#how many books been read / how many books reading now
+SELECT  book.title FROM library_v2.orders
+JOIN book ON (book_id = book.id)
+WHERE user_id = 4 AND order_status_id =2;
+
+
+#most popular and unpopular book in selected period
+SELECT book.title FROM book WHERE book.id = ( SELECT orders.book_id FROM orders WHERE processed_date BETWEEN "2021-09-01" AND "2021-09-1=20" GROUP BY orders.book_id ORDER BY COUNT(orders.book_id) DESC LIMIT 1);
+
 
 #4 is the same as "All users should be able." #5
 
