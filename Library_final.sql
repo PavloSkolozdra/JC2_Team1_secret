@@ -11,19 +11,19 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- Schema library_v2
+-- Schema library
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema library_v2
+-- Schema library
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `library_v2` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-USE `library_v2` ;
+CREATE SCHEMA IF NOT EXISTS `library` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `library` ;
 
 -- -----------------------------------------------------
--- Table `library_v2`.`author`
+-- Table `library`.`author`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `library_v2`.`author` (
+CREATE TABLE IF NOT EXISTS `library`.`author` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
@@ -35,9 +35,9 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `library_v2`.`book_status`
+-- Table `library`.`book_status`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `library_v2`.`book_status` (
+CREATE TABLE IF NOT EXISTS `library`.`book_status` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `status` ENUM('available', 'unavailable', 'deprecated') NOT NULL DEFAULT 'available',
   `description` VARCHAR(255) NULL,
@@ -46,21 +46,21 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `library_v2`.`book`
+-- Table `library`.`book`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `library_v2`.`book` (
+CREATE TABLE IF NOT EXISTS `library`.`book` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(45) NOT NULL,
   `initial_amount` INT NOT NULL,
   `actual_amount` INT NOT NULL DEFAULT '0',
   `year` VARCHAR(4) NOT NULL,
-  `status` INT NOT NULL DEFAULT 'available',
+  `status_id` INT NOT NULL,
   `description` VARCHAR(255) NULL,
   PRIMARY KEY (`id`, `status`),
   INDEX `status_idx` (`status` ASC) VISIBLE,
   CONSTRAINT `status`
     FOREIGN KEY (`status`)
-    REFERENCES `library_v2`.`book_status` (`id`)
+    REFERENCES `library`.`book_status` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -70,9 +70,9 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `library_v2`.`author_role`
+-- Table `library`.`author_role`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `library_v2`.`author_role` (
+CREATE TABLE IF NOT EXISTS `library`.`author_role` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `role` ENUM('author', 'co-author') NOT NULL DEFAULT 'author',
   `description` VARCHAR(255) NULL,
@@ -81,9 +81,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `library_v2`.`book_author`
+-- Table `library`.`book_author`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `library_v2`.`book_author` (
+CREATE TABLE IF NOT EXISTS `library`.`book_author` (
   `book_id` INT NOT NULL,
   `author_id` INT NOT NULL,
   `author_role_id` INT NOT NULL,
@@ -92,13 +92,13 @@ CREATE TABLE IF NOT EXISTS `library_v2`.`book_author` (
   PRIMARY KEY (`book_id`, `author_id`, `author_role_id`),
   CONSTRAINT `fk_book_authors_author1`
     FOREIGN KEY (`author_id`)
-    REFERENCES `library_v2`.`author` (`id`),
+    REFERENCES `library`.`author` (`id`),
   CONSTRAINT `fk_book_authors_book1`
     FOREIGN KEY (`book_id`)
-    REFERENCES `library_v2`.`book` (`id`),
+    REFERENCES `library`.`book` (`id`),
   CONSTRAINT `author_role_id`
     FOREIGN KEY (`author_role_id`)
-    REFERENCES `library_v2`.`author_role` (`id`)
+    REFERENCES `library`.`author_role` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -107,9 +107,9 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `library_v2`.`user_role`
+-- Table `library`.`user_role`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `library_v2`.`user_role` (
+CREATE TABLE IF NOT EXISTS `library`.`user_role` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `role` ENUM('manager', 'reader') NOT NULL DEFAULT 'reader',
   `description` VARCHAR(255) NULL,
@@ -118,9 +118,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `library_v2`.`user`
+-- Table `library`.`user`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `library_v2`.`user` (
+CREATE TABLE IF NOT EXISTS `library`.`user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `library_v2`.`user` (
   INDEX `user_role_id_idx` (`user_role_id` ASC) VISIBLE,
   CONSTRAINT `user_role_id`
     FOREIGN KEY (`user_role_id`)
-    REFERENCES `library_v2`.`user_role` (`id`)
+    REFERENCES `library`.`user_role` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -145,20 +145,20 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `library_v2`.`order_status`
+-- Table `library`.`order_status`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `library_v2`.`order_status` (
+CREATE TABLE IF NOT EXISTS `library`.`order_status` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `status` ENUM('pending', 'prosessed', 'closed') NOT NULL DEFAULT 'pending',
+  `status` ENUM('pending', 'proсessed', 'closed') NOT NULL DEFAULT 'pending',
   `description` VARCHAR(255) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `library_v2`.`order`
+-- Table `library`.`order`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `library_v2`.`order` (
+CREATE TABLE IF NOT EXISTS `library`.`order` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
   `book_id` INT NOT NULL,
@@ -166,17 +166,17 @@ CREATE TABLE IF NOT EXISTS `library_v2`.`order` (
   `processed_date` DATE NULL,
   `due_date` DATE NULL DEFAULT NULL,
   `return_date` DATE NULL DEFAULT NULL,
-  `order_status_id` INT NOT NULL DEFAULT 'pending',
+  `order_status_id` INT NOT NULL,
   `description` VARCHAR(255) NULL,
   PRIMARY KEY (`id`, `order_status_id`),
   INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
   INDEX `order_status_id_idx` (`order_status_id` ASC) VISIBLE,
   CONSTRAINT `user_id`
     FOREIGN KEY (`user_id`)
-    REFERENCES `library_v2`.`user` (`id`),
+    REFERENCES `library`.`user` (`id`),
   CONSTRAINT `order_status_id`
     FOREIGN KEY (`order_status_id`)
-    REFERENCES `library_v2`.`order_status` (`id`)
+    REFERENCES `library`.`order_status` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -186,9 +186,9 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `library_v2`.`book_copy`
+-- Table `library`.`book_copy`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `library_v2`.`book_copy` (
+CREATE TABLE IF NOT EXISTS `library`.`book_copy` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `book_id` INT NOT NULL,
   `orders_id` INT NOT NULL,
@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `library_v2`.`book_copy` (
   INDEX `fk_book_copies_orders1_idx` (`orders_id` ASC) VISIBLE,
   CONSTRAINT `fk_book_copies_book1`
     FOREIGN KEY (`book_id`)
-    REFERENCES `library_v2`.`book` (`id`)
+    REFERENCES `library`.`book` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_book_copies_orders1`
