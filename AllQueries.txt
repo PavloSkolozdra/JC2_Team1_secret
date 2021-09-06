@@ -2,20 +2,70 @@ Library
 
 Create Application for managing library work.
 All users should be able
-1.	Get information about all books
+#1.	Get information about all books
 
-2.	Check if needed book is available
-SELECT book.id, book.title, book.year, book_status.status
-FROM book
-INNER JOIN book_status ON book.status_id=book_status.id
-WHERE book_status.status = 'available' AND book.title = 'Modern History';
+SELECT * FROM library.book;
 
-3.	Find books by author (main author, co-author)
+#2.	Check if needed book is available
 
-4.	Find book by title
+# Step1: Check if book exists in library:
+SELECT CASE WHEN EXISTS(SELECT * FROM library.books WHERE title = "Spring in Action") THEN true ELSE false END;
 
-5.	Get the most popular and the most unpopular books in selected period
+# Step2: Check is needed book exists is books_copies with status 2 (AVAILABLE):
+SELECT CASE WHEN EXISTS(SELECT * FROM library.books_copies WHERE book_id = 6 AND `status` = 2) THEN true ELSE false END;
 
+#3.	Find books by author
+
+# Step 1: Find authors id from "authors":
+SELECT id FROM library.authors WHERE library.authors.first_name = "Tim" AND library.authors.last_name = "Peierls";
+
+# Step 2: Select book_id from books_authors where author_id = previous SQL result:
+SELECT book_id FROM library.books_authors WHERE author_id = 6;
+
+# Step 3: Select book by book_id:
+SELECT * FROM library.books WHERE id = 3;
+
+#3.	Find books by co-author
+
+----------//------------ SAME as previous
+
+#4.	Find book by title
+
+SELECT * FROM library.books WHERE title = "Java Concurrency in Practice";
+
+#¹5.	Get the most popular
+
+SELECT 
+    title, `year`
+FROM
+    books
+WHERE
+    books.id = (SELECT 
+            orders.book_id
+        FROM
+            orders
+        WHERE
+            order_date BETWEEN '2021-02-02' AND '2021-03-05'
+        GROUP BY orders.book_id
+        ORDER BY COUNT(orders.book_id) DESC
+        LIMIT 1);
+
+#¹5.	Get the most unpopular
+
+SELECT 
+    title, `year`
+FROM
+    books
+WHERE
+    books.id = (SELECT 
+            orders.book_id
+        FROM
+            orders
+        WHERE
+            order_date BETWEEN '2021-02-02' AND '2021-03-05'
+        GROUP BY orders.book_id
+        ORDER BY COUNT(orders.book_id)
+        LIMIT 1);
 6.	*Registration functionality
 7.	*Log in
 --------------------------------------------------------------------------------------
