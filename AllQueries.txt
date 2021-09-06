@@ -105,12 +105,130 @@ SELECT book.title FROM book WHERE book.id = ( SELECT orders.book_id FROM orders 
 Manager should be able
 1.	Register book with copies
 
+step 1 ______
+
+first checkout of table 'author' if this author present go to step 4 if not go tu step 2 and add author
+
+SELECT *
+    FROM authors
+       WHERE first_name='Joshua' and last_name = 'Bloch';
+
+step 2____
+add author
+
+INSERT INTO authors (first_name,last_name,)
+VALUES 
+('first_name','last_name');
+
+
+step 3_____
+
+add book 
+INSERT INTO books (title,year)
+VALUES 
+('title','year');
+
+
+step 4 ___ 
+add book with author 
+
+INSERT INTO books_authors (book_id,author_id,author_role_id)
+VALUES 
+('book_id','author_id','author_role_id');
+
+step 5 ____
+add copies book
+
+INSERT INTO books_copies (book_id,status)
+VALUES 
+('book_id','status');
+
 2.	Update book’ information
+UPDATE book
+SET 
+	title ="Update",
+	year  = "Update"
+WHERE id = "5";
+
+or 
+
+UPDATE books_authors
+SET 
+	author_id ="Update",
+	author_role_id = "Update"
+WHERE book_id = "5";
 
 3.	Delete One copy/Book with all copies
 
-4.	Give book to Reader
+first choose a copy which status  AVAILABLE
+SELECT *
+    FROM books_copies
+       WHERE book_id = '' and status = '2' ;
 
+next mark like deleted
+ 
+UPDATE bookbooks_copies
+SET 
+	status = '3'
+WHERE id = '';
+
+/*****************************************************************************************
+
+
+#3.1 Delete  Book with all copies
+
+
+
+ 
+UPDATE bookbooks_copies
+SET 
+	status = '3'
+WHERE status = '2';(AVAILABLE)
+
+4.	Give book to Reader
+first checkout of table 'order' with status  PROCESSED and next  such a client is a debtor if yes make order status REJECTED 
+
+SELECT *
+    FROM orders
+       WHERE user_id = '' and order_status_id= 'PROCESSED';
+
+next look  due_date if due_date > CURRENT_DATE() ;
+
+UPDATE orders
+SET 
+	order_status_id = '4'(REJECTED)
+WHERE id = '';
+
+if don'n debt go to table books _ copy and find copy with status AVAILABLE
+
+
+SELECT * FROM library.books_copies
+where 
+order_status_id = '2'(AVAILABLE);
+
+if there is no free to inform the author how long to wait 
+
+
+SELECT * FROM library.orders
+where 
+book_id = '1' and return_date<return_date;
+
+if free
+
+UPDATE orders
+SET 
+
+    processed_date= 'CURRENT_DATE() ',
+    due_date=' ADDDATE(CURRENT_DATE(), INTERVAL +60 DAY)',
+    book_copy_id='bool_copy',
+    order_status_id = '2'(PROCESSED)
+WHERE id = 'id';
+
+
+UPDATE books_copies
+SET 
+  status = 'ISSUED' ;
+WHERE id = 'id';
 5.	Set title of book and display count of this Book’ copies with information about them (available/unavailable in Library)
 
 6.	Get statistics by Reader (books which this user has read, is reading, how long he is our client)
