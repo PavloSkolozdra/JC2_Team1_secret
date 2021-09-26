@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en", xmlns:th="http://thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title>Edit book</title>
+</head>
+<body>
+<form th:method="PATCH" th:action="@{/books/{id}(id=${book.getId()})}" th:object="${book}">
+    <table>
+        <tr>
+            <td>
+                <label for="author">Author: </label>
+            </td>
+            <td>
+                <input type="text" th:field="*{author}" id="author"/>
+            </td>
+            <td>
+                <div style="color:red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="title">Title: </label>
+            </td>
+            <td>
+                <input type="text" th:field="*{title}" id="title"/>
+            </td>
+            <td>
+                <div style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="totalPageNumber">Number of pages: </label>
+            </td>
+            <td>
+                <input type="text" th:field="*{totalPageNumber}" id="totalPageNumber"/>
+            </td>
+            <td>
+                <div style="color:red" th:if="${#fields.hasErrors('totalPageNumber')}" th:errors="*{totalPageNumber}"></div>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Update book!"/></td>
+        </tr>
+    </table>
+
+</form>
+</body>
+</html>
